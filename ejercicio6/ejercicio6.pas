@@ -19,6 +19,25 @@ type
 		anio_nacimiento:anio;
 	end;
 	
+procedure calcularEdad(a:alumno;var min1:integer;var min2:integer;var nom1:cadena20;var nom2:cadena20);
+begin
+	if(a.anio_nacimiento<min1)then		
+	begin
+			min2:=min1;
+			min1:=a.anio_nacimiento;
+			
+			nom2:=nom1;
+			nom1:=a.nombre;
+	end
+	else
+		if(a.anio_nacimiento<=min2)then
+		begin
+			min2:=a.anio_nacimiento;
+			
+			nom2:=a.nombre;
+		end;
+end;
+	
 procedure leerAlumnos(var a:alumno;var cont:integer);
 begin
 	writeln('Ingrese numero de inscripcion:');
@@ -61,17 +80,30 @@ end;
 
 
 var
-	i,contIncs,DNIsPar:integer;
+	i,contIncs,DNIsPar,edad1,edad2:integer;
 	porcentaje:real;
 	a:alumno;
+	nomM1,nomM2:cadena20;
 BEGIN
 	contIncs:=0;
 	DNIsPar:=0;
+	
+	edad1:=2023;
+	edad2:=2023;
+	
+	nomM1:=' ';
+	nomM2:=' ';
+	
 	for i:=1 to 5 do
 	begin
 		leerAlumnos(a,contIncs);
+		calcularEdad(a,edad1,edad2,nomM1,nomM2);
 		procesarDNIs(a,DNIsPar);
 	end;
+	
 	porcentaje:=((DNIsPar*100)/contIncs);
-	writeln(porcentaje:0:2,'%');
+	writeln('De lo leido se obtuvo el porcentaje de tantos DNIs con digitos pares: ',porcentaje:0:2,'%');
+	writeln('Y se registro a las personas de mayor edad con el siguiente orden:');
+	writeln('El primero mayor de edad: ',nomM1);
+	writeln('El segundo mayor de edad: ',nomM2);
 END.
