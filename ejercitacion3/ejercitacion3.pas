@@ -76,17 +76,87 @@ begin
 	nuevo^.siguiente:=nil;
 	
 	if(l=nil)then
-		l:=nuevo
+		l:=nuevo				//Su anterior
 	else begin
-		nuevo^.siguiente := l;
-		l:=nuevo;
+		nuevo^.siguiente := l;	//Su anterior
+		l:=nuevo;				//Su siguiente
 	end;
 end;
 
 //Inciso A
-procedure procesarLista();
+procedure informarMaximo(l:lista);
+var
+	lPri:lista;	//Lista auxiliar
+	v:viajes;
+	Max,cantViajes:integer;
 begin
+	new(lPri);
+	lPri:=l;
+	
+	cantViajes:=0;
+	Max:=-1;
+	
+	v.codigoAvion:=l^.elementos.codigoAvion;
+	
+	//Primer bucle donde repasara la lista hasta terminar de procesar
+	while(lPri<>nil)do
+	begin
+		
+		//Segundo bucle donde recorrera la lista haciendo el conteo de todas las coincidencias hasta el elemento final
+		while(l<>nil)do
+		begin
+			if(v.codigoAvion=l^.elementos.codigoAvion)then
+				cantViajes:=cantViajes+1;
+			l:=l^.siguiente;
+		end;
+		
+		if(cantViajes>Max)then
+		begin
+			Max:=cantViajes;
+			v.codigoAvion := lPri^.elementos.codigoAvion;
+		end;
+		cantViajes:=0;
+		lPri:=lPri^.siguiente;
+	end;
+	
+	writeln('Se obtuvo que el avion con mas viajes fue el avion con el codigo: ',v.codigoAvion);
+	dispose(lPri);
+end;
 
+//Inciso C (Falta Desarrollar - Implementar segunda lista)
+procedure promedioPasajeros(l:lista);
+var
+	lPri:lista;
+	v:viajes;
+	cant:integer;
+begin
+	new(lPri);
+	lPri:=l;
+	
+	cant:=0;
+	
+	
+	
+	//Primer bucle donde repasara la lista hasta terminar de procesar
+	while(lPri<>nil)do
+	begin
+		v.codigoAvion := lPri^.elementos.codigoAvion;
+		//Segundo bucle donde recorrera la lista haciendo el conteo de todas las coincidencias hasta el elemento final
+		while(l<>nil)do
+		begin
+			if(v.codigoAvion=l^.elementos.codigoAvion)then
+				cant:=cant+l^.elementos.cantidadPasajeros;
+			l:=l^.siguiente;
+		end;
+		
+		
+		
+		lPri:=lPri^.siguiente;
+		
+	end;
+	
+	writeln('Se obtuvo que el avion con mas viajes fue el avion con el codigo: ',v.codigoAvion);
+	
 end;
 
 BEGIN
