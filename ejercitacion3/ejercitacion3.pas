@@ -54,7 +54,7 @@ begin
 	readln(aux.anioViaje);
 	writeln('Ingrese ciudad de destino:');
 	readln(aux.ciudadDestino);
-	
+	writeln(' ');
 	if(((aux.anioViaje MOD 10)=0)and(aux.ciudadDestino = destinoClave))then
 	begin
 		v.codigoAvion := aux.codigoAvion;
@@ -159,5 +159,15 @@ begin
 	
 end;
 
+
+var
+	l:lista;
+	i:integer;
 BEGIN
+	inicializarLista(l);
+	for i:=1 to 2 do
+	begin
+		generarLista(l);
+	end;
+	informarMaximo(l);
 END.
