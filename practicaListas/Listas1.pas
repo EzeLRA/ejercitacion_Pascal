@@ -1,145 +1,153 @@
-program Listas1;
+program vectores;
+const
+	dimF=10;
 type
-	numeros = integer;
-	
-	lista =^ nodo;
-	
-	nodo = record
-		elementos : numeros;
-		siguiente : lista;
-	end;
+	vector = array[1..dimF]of integer;
 
-procedure inicializarLista(var l:lista);
-begin
-	l := nil;
-end;
+{
+*	Inicializar vector 
+}
 
-procedure agregarAdelante(var l:lista);
+procedure inicializarV(var v:vector);
 var
-	nuevo : lista;
+	i:integer;
 begin
-
-	new(nuevo); 					//Se crea un Nodo
-	
-	writeln('Ingrese un numero');	//Se agrega la informacion en el nodo
-	readln(nuevo^.elementos);
-	
-	nuevo^.siguiente := l;			//Se enlaza con la lista inicial
-	
-	l := nuevo;						//Se actualiza el primer nodo agregado
-	
+	for i:=1 to 10 do
+		v[i]:=0;
 end;
 
-procedure agregarAtras(var l:lista);
+{
+*	Ordenar vector 
+}
+
+procedure ordenarMayorMenor(var v:vector);
 var
-	nuevo,aux : lista;
+	i,j,aux:integer;
 begin
-	
-	new(nuevo); 					//Se crea un Nodo
-	writeln('Ingrese un numero');	//Se agrega la informacion en el nodo
-	readln(nuevo^.elementos);
-	nuevo^.siguiente := nil;
-	
-	if(l=nil)then l:= nuevo				//Verifica si la lista no esta vacia
-	else begin
-		aux := l;
-		while(aux^.siguiente <> nil)do		//Recorre la lista hasta quedar ubicado en la ultima posicion
-			aux:= aux^.siguiente;
-			
-		aux^.siguiente := nuevo;			//Asigna al ultimo nodo que su siguiente sera el (nuevo)
+ 	for i:=1 to dimF-1 do begin		//Recorrido e intercambio
+		for j:=i+1 to dimF do begin
+			if(v[i]<v[j])then begin
+				aux := v[i];
+				v[i]:=v[j];
+				v[j]:=aux; 
+			end;
+		end;
 	end;
-	
 end;
-
-procedure agregarOrdenado(var l:lista);	
+procedure ordenarMenorMayor(var v:vector);
 var
-	nuevo,aux : lista;
+	i,j,aux:integer;
 begin
-	
-	new(nuevo); 					//Se crea un Nodo
-	writeln('Ingrese un numero');	//Se agrega la informacion en el nodo
-	readln(nuevo^.elementos);
-	nuevo^.siguiente := nil;
-	
-	if(l=nil)then l:= nuevo				
-	else begin
-		aux := l;
-		while((aux^.siguiente <> nil)AND(aux^.elementos <> nuevo^.elementos))do		
-			aux:= aux^.siguiente;
-			
-		aux^.siguiente := nuevo;			
-	end;
-	
-end;
-
-
-procedure imprimirElementos(l:lista);
-begin
-	while(l <> nil)do
-	begin
-		
-		writeln(l^.elementos);
-		
-		l := l^.siguiente;			//Traspasa al siguiente nodo hasta llegar al nodo final que contiene (nil)
-		
+ 	for i:=1 to dimF-1 do begin		//Recorrido e intercambio
+		for j:=i+1 to dimF do begin
+			if(v[i]>v[j])then begin
+				aux := v[i];
+				v[i]:=v[j];
+				v[j]:=aux; 
+			end;
+		end;
 	end;
 end;
 
-procedure cargarAdelante(var l:lista);
-begin
-	agregarAdelante(l);
-	while(l^.elementos <> 0)do
-	begin
-		agregarAdelante(l);
-	end;
-end;
+{
+*	Carga aleatoria (Completo)
+}
 
-function buscarElemento(l:lista; x : integer):boolean;
+procedure cargarAleatorio(var v:vector;entrada:integer;var dimL:integer);
 var
-	encontrado:boolean;
+	i:integer;
 begin
-	
-	encontrado:=false;
-	
-	while((l <> nil)and(encontrado = false))do
-	begin
-		if(l^.elementos = x)then
-		encontrado:=true;
+	for i:=1 to dimF do begin
+		v[i]:=random(entrada);
+		dimL:=dimL+1;
+	end;
+end;
+
+{
+*	Busqueda(Completa)
+}
+
+procedure buscarMax(v:vector);
+var
+	Max,i:integer;
+begin
+	Max:=-1;
+	for i:=1 to dimF do begin
+		if(Max < v[i])then
+			Max:=v[i];
+	end;
+	writeln('maximo:',Max);
+end;
+procedure buscarMin(v:vector);
+var
+	Min,i:integer;
+begin
+	Min:=9999;
+	for i:=1 to dimF do begin
+		if(Min > v[i])then
+			Min:=v[i];
+	end;
+	writeln('minimo:',Min);
+end;
+procedure buscarDato(v:vector;entrada:integer);
+var
+	encontro:boolean;
+	i:integer;
+begin
+	encontro:=false;
+	for i:=1 to dimF do begin
+		if(v[i] = entrada)then
+			encontro:=true;
+	end;
+	if(encontro = true)then
+		writeln('encontrado')
+	else
+		writeln('no encontrado');
+end;
+procedure buscarEliminar(var v:vector;entrada:integer);
+var
+	encontro:boolean;
+	i:integer;
+begin
+	encontro:=false;
+	for i:=1 to dimF-1 do begin
+		if(encontro=true)then
+			v[i]:=v[i+1];
+		if(v[i] = entrada)then begin
+			v[i]:=v[i+1];
+			encontro:=true;
+		end else
+			encontro:=false;
 		
-		l := l^.siguiente;			//Traspasa al siguiente nodo hasta llegar al nodo final que contiene (nil)
 	end;
-	
-	buscarElemento:=encontrado;
-	
+	if(encontro = true)then
+		writeln('encontrado')
+	else
+		writeln('no encontrado');
 end;
+{
+*	Impresion de vector 
+}
 
-procedure cargarAtras(var l:lista);
+procedure imprimirV(v:vector);
+var
+	i:integer;
 begin
-	
-	agregarAtras(l);
-	while((buscarElemento(l,0)) <> true)do
-	begin
-		agregarAtras(l);
-	end;
+	for i:=1 to dimF do
+		writeln(v[i]);
 end;
-
-procedure cargarOrdenado(var l:lista);
-begin
-	
-	agregarOrdenado(l);
-	while((buscarElemento(l,0)) <> true)do
-	begin
-		agregarOrdenado(l);
-	end;
-end;
-
 VAR
-	l : lista;
+	dimL:integer;
+    v:vector;
 BEGIN
-	inicializarLista(l);
-	
-	cargarOrdenado(l);
-	
-	writeln(' ');
-	imprimirElementos(l); 
+	dimL:=0;
+    inicializarV(v);
+    cargarAleatorio(v,40,dimL);
+    ordenarMenorMayor(v);
+	imprimirV(v);
+	buscarMax(v);
+	buscarMin(v);
+	buscarDato(v,24);
+	buscarEliminar(v,24);
+	imprimirV(v);
 END.

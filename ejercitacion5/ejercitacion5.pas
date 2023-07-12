@@ -15,24 +15,27 @@ type
 		direccionOrigen : String;
 		direccionDestino : String;
 		recorridosKM : real;
+	end;
 	
-	lista ^= nodo;
+	lista =^ nodo;
+	
 	nodo = record
 		dato : viaje;
 		siguiente : lista;
 	end;
 
-procedure definirMaximos(var in,m1,m2:real;var cod,codM1,codM2:integer);
+//Inciso A
+procedure definirMaximos(entrada:real;var m1,m2:real;cod:integer;var codM1,codM2:integer);
 begin
-	in:=0;
-	if(in > m1)then begin
+	entrada:=0;
+	if(entrada > m1)then begin
 		m2:=m1;
-		m1:=in;
+		m1:=entrada;
 		codM2:=codM1;
 		codM1:=cod;
 	end else
-	if(in > m2)then	begin
-		m2:=in;
+	if(entrada > m2)then	begin
+		m2:=entrada;
 		codM2:=cod;
 	end;
 end;
@@ -45,20 +48,70 @@ begin
 	km1:=0;
 	km2:=0;
 	while(l<>nil)do begin
+		km:=0;
 		cod:=l^.dato.codigo;
 		while((l<>nil)AND(cod = l^.dato.codigo))do begin	//corte de control para cada codigo
-			//cuenta los recorridos del mismo codigo sumando para dar el total
+			
 			km:=km+l^.dato.recorridosKM;
 			cod:=l^.dato.codigo;
 			
 			l:=l^.siguiente;
 		end;
+		definirMaximos(km,km1,km2,cod,codM1,codM2);
+	end;
+	writeln(codM1,codM2,km1,km2);
+end;
+
+
+//Inciso B
+procedure agregarOrdenado(var l: lista; v:viaje);
+var
+	actual,anterior,nuevo:lista;	//Utiliza listas auxiliares para referenciar a las direcciones de l para desplazarse y insertar elementos
+begin
+	new (nuevo);
+	nuevo^.dato:=v;
+	nuevo^.siguiente:=nil;
+	
+	if (l = nil) then 	//Si es el primer elemento
+		l:= nuevo
+	else begin
+		actual:= l; 
+		anterior:=l;
+		while (actual <> nil)AND(actual^.dato.numero <> nuevo^.dato.numero) do		//Condicion a ordenar en la lista (En este caso de menor a mayor y en grupos)
+		begin
+			anterior:=actual;
+			actual:= actual^.siguiente;	//Recorre hasta ubicarse
+		end;
+	
+	
+		if (actual = l) then
+		begin
+			nuevo^.siguiente:= l; 
+			l:= nuevo;
+		end
+		else
+		begin
+			anterior^.siguiente:= nuevo; 
+			nuevo^.siguiente:= actual;
+		end;
+	end;
+End;
+
+procedure seleccionarViajes(l:lista;var lN:lista);
+begin
+	while(l<>nil)do begin
+		if(l^.dato.recorridosKM < 5)then
+			agregarOrdenado(lN,l^.dato);
+		l:=l^.siguiente;
 	end;
 end;
 
 VAR
-	
+	lPri,lB:lista;
 BEGIN
-
+	lPri:=nil;
+	lB:=nil;
+	informarCodigos(lPri);		//Inciso A
+	seleccionarViajes(lPri,lB);	//Inciso B
 END.
 
