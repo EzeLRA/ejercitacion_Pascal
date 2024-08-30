@@ -50,6 +50,23 @@ begin
 	end;
 end;
 
+procedure agregarAtrasUlt(var l,ult:lista; x:integer);
+var
+	nuevo:lista;
+begin
+	new(nuevo);
+	nuevo^.elemento := x;
+	nuevo^.siguiente := nil;
+	
+	if(l=nil)then
+		l:=nuevo
+	else
+		ult^.siguiente := nuevo;
+	ult:= nuevo;
+end;
+
+
+
 {
 *	Agregar Ordenado 
 }
@@ -112,6 +129,18 @@ begin
 		readln(x);
 	end;
 end;
+procedure cargarAtrasB(var l:lista);
+var
+	x:integer;
+	ultL : lista;
+begin
+	readln(x);
+	ultL:=l;
+	while(x <> fin)do begin
+		agregarAtrasUlt(l,ultL,x);
+		readln(x);
+	end;
+end;	
 procedure cargarOrdenado(var l:lista);
 var
 	x:integer;
@@ -223,13 +252,12 @@ begin
 		writeln('No se encontro el elemento');
 end;
 
-
 VAR
 	l:lista;
 BEGIN
 	crearLista(l);
-	cargarAtras(l);
+	cargarAtrasB(l);
 	imprimirLista(l);
-	buscarEliminar(l);
-	imprimirLista(l);
+	//buscarEliminar(l);
+	//imprimirLista(l);
 END.

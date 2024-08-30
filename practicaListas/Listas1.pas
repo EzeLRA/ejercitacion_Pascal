@@ -136,6 +136,42 @@ begin
 	for i:=1 to dimF do
 		writeln(v[i]);
 end;
+
+
+
+function par(v:vector;dl:integer):boolean;
+var
+	i:integer;
+	pares:integer;
+	impares:integer;
+	dig:integer;
+	parV:integer;
+	imparV:integer;
+begin
+	parV:=0;
+	imparV:=0;
+	for i:=1 to dl do begin 
+		pares:=0;
+		impares:=0;
+		while(v[i]>0)do begin
+			dig:=v[i] MOD 10;
+			if((dig MOD 2)=0)then
+				pares:=pares+1
+			else
+				impares:=impares+1;
+			v[i]:=v[i] DIV 10 ;
+		end;
+		if(pares>impares)then
+			parV:=parV+1
+		else
+			imparV:=imparV+1;
+		
+		pares:=0;
+		impares:=0;
+	end;
+	par:=(parV>imparV);
+end;
+
 VAR
 	dimL:integer;
     v:vector;
@@ -144,10 +180,16 @@ BEGIN
     inicializarV(v);
     cargarAleatorio(v,40,dimL);
     ordenarMenorMayor(v);
-	imprimirV(v);
-	buscarMax(v);
-	buscarMin(v);
-	buscarDato(v,24);
-	buscarEliminar(v,24);
+    
+    if(par(v,dimL) = true)then
+		writeln('Vector par')
+	else
+		writeln('Vector impar');
+	
+	//imprimirV(v);
+	//buscarMax(v);
+	//buscarMin(v);
+	//buscarDato(v,24);
+	//buscarEliminar(v,24);
 	imprimirV(v);
 END.
